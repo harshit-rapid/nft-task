@@ -1,5 +1,5 @@
 import { IsEnum, IsNumber, IsString } from 'class-validator';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ContractType } from './enum/contractType.enum';
 import { Metadata } from './metadata.entity';
 
@@ -10,6 +10,9 @@ export class Nft {
   @Column()
   contract_address: string;
   @Column()
+  // @OneToOne((_type) => Metadata, (metadata) => metadata.token_id, {
+  //   eager: true,
+  // })
   token_id: number;
   @Column()
   owner_address: string;
@@ -21,6 +24,7 @@ export class Nft {
   symbol: string;
   @Column()
   token_uri: string;
-  @OneToOne((_type) => Metadata, (metadata) => metadata.)
+  @OneToOne(() => Metadata)
+  @JoinColumn()
   metadata: Metadata;
 }
