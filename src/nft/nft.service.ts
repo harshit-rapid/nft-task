@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GetNftsFilterDto } from './dto/filter.dto';
 import { GetNftDto } from './dto/nft.dto';
+import { MetadatasRepository } from './metadatas.repository';
 import { Nft } from './nft.entity';
 import { NFTsRepository } from './nfts.repository';
 
@@ -10,17 +11,27 @@ export class NftService {
   constructor(
     @InjectRepository(NFTsRepository)
     private nftsRepository: NFTsRepository,
+    @InjectRepository(MetadatasRepository)
+    private metadatasRepository: MetadatasRepository,
   ) {}
 
-  getNftDetails(getNftDto: GetNftDto): Promise<Nft> {
-    return this.nftsRepository.getNftDetails(getNftDto);
+  async getNftDetails(getNftDto: GetNftDto): Promise<Nft> {
+    const nft = await this.nftsRepository.getNftDetails(getNftDto);
+    const metadata = await this.metadatasRepository.getMetadata(nft.token_uri);
+    nft.metadata = metadata;
+    return nft;
   }
 
   getAllNfts(filterDto: GetNftsFilterDto): Promise<Nft[]> {
     return this.nftsRepository.getNfts(filterDto);
   }
 
-  createNft(nftDto: GetNftDto): Promise<Nft> {
-    return this.nftsRepository.createNft(nftDto);
+  async createNft(nftDto: GetNftDto): Promise<Nft> {
+    const nft = await this.nftsRepository.getNftDetails(nftDto);
+    const metadata = await this.metadatasRepository.saveMetadata(nft.token_uri);
+    nft.metadata = metadata;
+    const res = await this.nftsRepository.createNft(nft);
+    this.metadatasRepository.save(metadata);
+    return res;
   }
 }

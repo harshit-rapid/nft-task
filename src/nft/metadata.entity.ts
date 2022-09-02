@@ -1,58 +1,60 @@
 import { IsOptional } from 'class-validator';
-import {
-  Column,
-  Entity,
-  OneToOne,
-  PrimaryColumn,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { Nft } from './nft.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Metadata {
   @PrimaryGeneratedColumn('uuid')
-  // @OneToOne((_type) => Nft, (nft) => nft.token_id, { eager: false })
   id: string;
-  @Column()
+
+  @Column({ nullable: true })
   @IsOptional()
   name: string;
-  @Column()
+
+  @Column({ nullable: true })
   @IsOptional()
   description: string;
-  @Column()
+
+  @Column({ nullable: true })
   @IsOptional()
   external_url: string;
-  @Column()
+
+  @Column({ nullable: true })
   @IsOptional()
   image: string;
-  @Column()
+
+  @Column({ nullable: true })
   @IsOptional()
   image_data: string;
-  @Column()
+
+  @Column({ nullable: true })
   @IsOptional()
   background_color: string;
-  @Column()
+
+  @Column({ nullable: true })
   @IsOptional()
   animation_url: string;
-  @Column()
+
+  @Column({ nullable: true })
   @IsOptional()
   youtube_url: string;
+
   @Column(() => Skills)
   @IsOptional()
   skills: Skills[];
+
   @Column(() => Attributes)
   @IsOptional()
   attributes: Attributes[];
 }
 
 export class Attributes {
-  @Column()
+  @Column({ nullable: true })
   @IsOptional()
   trait_type: string;
   @IsOptional()
-  @Column()
+  @Column({ nullable: true })
   value: string;
-  @Column()
+  @Column({ nullable: true })
   @IsOptional()
   display_type: string;
 }
@@ -61,19 +63,19 @@ export class Skills {
   @Column({ nullable: true })
   @IsOptional()
   region: string;
-  @Column()
+  @Column({ nullable: true })
   @IsOptional()
   number: number;
-  @Column()
+  @Column({ nullable: true })
   @IsOptional()
   skill_id: number;
-  @Column()
+  @Column({ nullable: true })
   @IsOptional()
   skill_type: string;
-  @Column()
+  @Column({ nullable: true })
   @IsOptional()
   skill_competence: string;
-  @Column()
+  @Column({ nullable: true })
   @IsOptional()
   is_elemental: boolean;
 }
