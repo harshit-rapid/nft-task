@@ -15,19 +15,37 @@ export class NftService {
     private metadatasRepository: MetadatasRepository,
   ) {}
 
-  async getNftDetails(getNftDto: GetNftDto): Promise<Nft> {
-    const nft = await this.nftsRepository.getNftDetails(getNftDto);
+  /**
+   * @description to get information of an NFT by given tokenId
+   * @param nftDto - an object containing the nft address and token ID.
+   * @returns Nft - An NFT object containing the details of the NFT
+   */
+
+  async getNftInfo(nftDto: GetNftDto): Promise<Nft> {
+    const nft = await this.nftsRepository.getNftInfo(nftDto);
     const metadata = await this.metadatasRepository.getMetadata(nft.token_uri);
     nft.metadata = metadata;
     return nft;
   }
 
+  /**
+   * @description Gets all the NFTs from the db
+   * @param filterDto - an object containing the search and sort parameters
+   * @returns Nft - An array NFT object containing the details of the NFT
+   */
+
   getAllNfts(filterDto: GetNftsFilterDto): Promise<Nft[]> {
-    return this.nftsRepository.getNfts(filterDto);
+    return this.nftsRepository.getAllNfts(filterDto);
   }
 
+  /**
+   * @description Stores an NFT on the DB.
+   * @param nftDto - an object containing the nft address and token ID.
+   * @returns Nft - An NFT object containing the details of the NFT
+   */
+
   async createNft(nftDto: GetNftDto): Promise<Nft> {
-    const nft = await this.nftsRepository.getNftDetails(nftDto);
+    const nft = await this.nftsRepository.getNftInfo(nftDto);
     const metadata = await this.metadatasRepository.saveMetadata(nft.token_uri);
     nft.metadata = metadata;
     const res = await this.nftsRepository.createNft(nft);

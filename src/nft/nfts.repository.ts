@@ -1,5 +1,5 @@
 import { CustomRepository } from '../database/typeorm-ex.decorator';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { GetNftDto } from './dto/nft.dto';
 import { Nft } from './nft.entity';
 import { GetNftsFilterDto } from './dto/filter.dto';
@@ -12,15 +12,32 @@ import { ERC1155Abi } from 'shared/ABI/ERC1155';
 
 @CustomRepository(Nft)
 export class NFTsRepository extends Repository<Nft> {
-  async getNfts(filterDto: GetNftsFilterDto): Promise<Nft[]> {
+  async getAllNfts(filterDto: GetNftsFilterDto): Promise<Nft[]> {
     const { search, sort }: any = filterDto;
-    // TODO: Implement sort and search
-    const nfts = await this.find();
+    let nfts;
+
+    if (search || sort) {
+      nfts = await this.find({
+        order: {
+          token_id: sort,
+        },
+        where: [
+          {
+            contract_address: Like(search),
+          },
+          {
+            owner_address: Like(search),
+          },
+        ],
+      });
+    } else {
+      nfts = await this.find();
+    }
     console.log({ nfts });
     return nfts;
   }
 
-  async getNftDetails(nftDto: GetNftDto): Promise<Nft> {
+  async getNftInfo(nftDto: GetNftDto): Promise<Nft> {
     const { contract_address, token_id } = nftDto;
 
     let contract, contract_type, name, symbol, token_uri, owner_address, erc165;
