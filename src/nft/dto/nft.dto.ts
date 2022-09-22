@@ -2,12 +2,12 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class GetNftDto {
   @ApiProperty({
-    description: 'Nft Contract Address',
+    description: 'The Contract Address of the NFT.',
     type: String,
   })
   contract_address: string;
   @ApiProperty({
-    description: 'TokenId',
+    description: 'TokenId of the NFT.',
     type: Number,
   })
   token_id: number;

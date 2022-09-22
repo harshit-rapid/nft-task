@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmExModule } from 'src/database/typeorm-ex.module';
+import { TypeOrmExModule } from '../database/typeorm-ex.module';
 import { MetadatasRepository } from './metadatas.repository';
 import { NftController } from './nft.controller';
 import { NftService } from './nft.service';

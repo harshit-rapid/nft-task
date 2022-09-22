@@ -3,12 +3,12 @@ import { Like, Repository } from 'typeorm';
 import { GetNftDto } from './dto/nft.dto';
 import { Nft } from './nft.entity';
 import { GetNftsFilterDto } from './dto/filter.dto';
-import { ERC721Abi } from 'shared/ABI/ERC721';
+import { ERC721Abi } from '../shared/ABI/ERC721';
 import { ContractType } from './enum/contractType.enum';
-import { web3 } from 'shared/web3';
-import { IERC165 } from 'shared/ABI/IERC165';
+import { web3 } from '../shared/web3';
+import { IERC165 } from '../shared/ABI/IERC165';
 import { NotAcceptableException, NotFoundException } from '@nestjs/common';
-import { ERC1155Abi } from 'shared/ABI/ERC1155';
+import { ERC1155Abi } from '../shared/ABI/ERC1155';
 
 @CustomRepository(Nft)
 export class NFTsRepository extends Repository<Nft> {
@@ -31,9 +31,8 @@ export class NFTsRepository extends Repository<Nft> {
         ],
       });
     } else {
-      nfts = await this.find();
+      nfts = await this.find({});
     }
-    console.log({ nfts });
     return nfts;
   }
 
@@ -50,7 +49,7 @@ export class NFTsRepository extends Repository<Nft> {
 
     try {
       if (await erc165.methods.supportsInterface('0xd9b67a26').call()) {
-        //ERC1155
+        //ERC1155 
         contract = new web3.eth.Contract(ERC1155Abi, contract_address);
         contract_type = ContractType.ERC1155;
         token_uri = await contract.methods.uri(token_id).call();
@@ -76,7 +75,6 @@ export class NFTsRepository extends Repository<Nft> {
       symbol,
       token_uri,
     });
-    console.log({ nft });
     return nft;
   }
   async createNft(nft: Nft): Promise<Nft> {

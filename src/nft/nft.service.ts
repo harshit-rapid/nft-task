@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GetNftsFilterDto } from './dto/filter.dto';
 import { GetNftDto } from './dto/nft.dto';
 import { MetadatasRepository } from './metadatas.repository';
 import { Nft } from './nft.entity';
 import { NFTsRepository } from './nfts.repository';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class NftService {
@@ -14,6 +15,13 @@ export class NftService {
     @InjectRepository(MetadatasRepository)
     private metadatasRepository: MetadatasRepository,
   ) {}
+
+  private readonly logger = new Logger(NftService.name);
+
+  @Cron('45 * * * * *')
+  handleCron() {
+    this.logger.debug('Called when the current second is 45');
+  }
 
   /**
    * @description to get information of an NFT by given tokenId

@@ -1,13 +1,17 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 
 export class GetNftsFilterDto {
-  @ApiProperty()
+  @ApiPropertyOptional({ description: 'Enter search keyword', type: String })
   @IsOptional()
   @IsString()
   search?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional({
+    description: 'Order of result',
+    enum: ['ASC', 'DESC'],
+    default: 'ASC',
+  })
   @IsOptional()
   @IsString()
   sort?: string;

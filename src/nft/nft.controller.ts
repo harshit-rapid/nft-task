@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import {
   ApiBody,
   ApiCreatedResponse,
   ApiOkResponse,
-  ApiParam,
+  ApiOperation,
+  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { GetNftsFilterDto } from './dto/filter.dto';
@@ -11,21 +12,23 @@ import { GetNftDto } from './dto/nft.dto';
 import { Nft } from './nft.entity';
 import { NftService } from './nft.service';
 
-@ApiTags('nft')
+// @ApiTags('nft')
 @Controller('nft')
 export class NftController {
   constructor(private nftService: NftService) {}
 
   @Get()
+  @ApiTags('nft')
   @ApiOkResponse({
     description: 'returns Nft Info',
     type: Nft,
   })
-  getNftInfo(@Body() nftDto: GetNftDto): Promise<Nft> {
-    console.log({ nftDto });
-    return this.nftService.getNftInfo(nftDto);
+  getNftInfo(@Param() nftDto: GetNftDto): Promise<Nft> {
+    const res: Promise<Nft> = this.nftService.getNftInfo(nftDto);
+    return res;
   }
   @Get('all')
+  @ApiTags('nft')
   @ApiOkResponse({
     description: 'returns all Nfts ',
     type: Nft,
